@@ -11,7 +11,8 @@ func main() {
 	var wg sync.WaitGroup
 	resultsChannel := make(chan string)
 
-	pp.BinaryVsSerialSearch(&wg, resultsChannel)
+	// pp.BinaryVsSerialSearch(&wg, resultsChannel)
+	pp.ManipulateLinkedLists(&wg, resultsChannel)
 
 	go func() {
 		wg.Wait()

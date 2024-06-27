@@ -1,0 +1,5 @@
+package pp
+
+func LinkedList() {
+
+}
