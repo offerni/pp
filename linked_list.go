@@ -32,6 +32,27 @@ func (list *linkedList) AddNodeToEnd(data int) {
 	}
 }
 
+func (list *linkedList) RemoveFromEnd() {
+	if list.head == nil {
+		return
+	}
+
+	if list.head.next == nil {
+		list.head = nil
+		return
+	}
+
+	currentNode := list.head
+	var previousNode *node
+
+	for currentNode.next != nil {
+		previousNode = currentNode
+		currentNode = currentNode.next
+	}
+
+	previousNode.next = nil
+}
+
 func (list *linkedList) AddNodeToBeginning(data int) {
 	newNode := &node{data, nil, nil}
 
@@ -42,7 +63,6 @@ func (list *linkedList) AddNodeToBeginning(data int) {
 		currentNode.previous = newNode
 		newNode.next = currentNode
 		list.head = newNode
-
 	}
 }
 
@@ -69,6 +89,7 @@ func ManipulateLinkedLists(wg *sync.WaitGroup, resultsChannel chan<- string) {
 		list.AddNodeToBeginning(1)
 		list.AddNodeToBeginning(0)
 		list.AddNodeToBeginning(-1)
+		list.RemoveFromEnd()
 		list.Print(resultsChannel)
 	}()
 }
