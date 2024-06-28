@@ -44,6 +44,40 @@ func (list *linkedList) searchWithDebug(term int, resultsChannel chan<- string) 
 	resultsChannel <- fmt.Sprintf("Node %d does not exist in the current list", term)
 }
 
+func (list *linkedList) removeByTerm(term int) {
+	node := list.search(term)
+	if node == nil {
+		return
+	}
+
+	if node == list.head {
+		list.head = node.next
+		if list.head != nil {
+			list.head.previous = nil
+		}
+		return
+	}
+
+	if node.next == nil {
+		previousNode := node.previous
+		if previousNode != nil {
+			previousNode.next = nil
+		}
+		return
+	}
+
+	previousNode := node.previous
+	nextNode := node.next
+
+	if previousNode != nil {
+		previousNode.next = nextNode
+	}
+
+	if nextNode != nil {
+		nextNode.previous = previousNode
+	}
+}
+
 func (list *linkedList) addNodeToEnd(data int) {
 	newNode := &node{data, nil, nil}
 
@@ -57,7 +91,7 @@ func (list *linkedList) addNodeToEnd(data int) {
 		}
 
 		currentNode.next = newNode
-		currentNode.previous = currentNode
+		newNode.previous = currentNode
 	}
 }
 
@@ -135,7 +169,9 @@ func ManipulateLinkedLists(wg *sync.WaitGroup, resultsChannel chan<- string) {
 		list.addNodeToBeginning(-1)
 		list.removeFromEnd()
 		list.removeFromBeginning()
-		list.searchWithDebug(5, resultsChannel)
+		list.searchWithDebug(4, resultsChannel)
+		list.removeByTerm(4)
+		list.removeByTerm(0)
 
 		list.Print(resultsChannel)
 	}()
