@@ -15,7 +15,7 @@ type linkedList struct {
 	head *node
 }
 
-func (list *linkedList) AddNodeToEnd(data int) {
+func (list *linkedList) addNodeToEnd(data int) {
 	newNode := &node{data, nil, nil}
 
 	if list.head == nil {
@@ -32,7 +32,7 @@ func (list *linkedList) AddNodeToEnd(data int) {
 	}
 }
 
-func (list *linkedList) RemoveFromEnd() {
+func (list *linkedList) removeFromEnd() {
 	if list.head == nil {
 		return
 	}
@@ -53,7 +53,7 @@ func (list *linkedList) RemoveFromEnd() {
 	previousNode.next = nil
 }
 
-func (list *linkedList) AddNodeToBeginning(data int) {
+func (list *linkedList) addNodeToBeginning(data int) {
 	newNode := &node{data, nil, nil}
 
 	if list.head == nil {
@@ -64,6 +64,21 @@ func (list *linkedList) AddNodeToBeginning(data int) {
 		newNode.next = currentNode
 		list.head = newNode
 	}
+}
+
+func (list *linkedList) removeFromBeginning() {
+	if list.head == nil {
+		return
+	}
+
+	if list.head.next == nil {
+		list.head = nil
+		return
+	}
+
+	nextNode := list.head.next
+	nextNode.previous = nil
+	list.head = nextNode
 }
 
 func (list *linkedList) Print(resultsChannel chan<- string) {
@@ -81,15 +96,16 @@ func ManipulateLinkedLists(wg *sync.WaitGroup, resultsChannel chan<- string) {
 		defer wg.Done()
 		var list linkedList
 
-		list.AddNodeToEnd(3)
-		list.AddNodeToEnd(4)
-		list.AddNodeToEnd(5)
-		list.AddNodeToEnd(6)
-		list.AddNodeToBeginning(2)
-		list.AddNodeToBeginning(1)
-		list.AddNodeToBeginning(0)
-		list.AddNodeToBeginning(-1)
-		list.RemoveFromEnd()
+		list.addNodeToEnd(3)
+		list.addNodeToEnd(4)
+		list.addNodeToEnd(5)
+		list.addNodeToEnd(6)
+		list.addNodeToBeginning(2)
+		list.addNodeToBeginning(1)
+		list.addNodeToBeginning(0)
+		list.addNodeToBeginning(-1)
+		list.removeFromEnd()
+		list.removeFromBeginning()
 		list.Print(resultsChannel)
 	}()
 }
