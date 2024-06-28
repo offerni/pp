@@ -15,35 +15,33 @@ type linkedList struct {
 	head *node
 }
 
-func (list *linkedList) search(term int) bool {
+func (list *linkedList) search(term int) *node {
 	if list.head == nil {
-		return false
+		return nil
 	}
 
 	currentNode := list.head
 
 	for currentNode != nil {
 		if term == currentNode.data {
-			return true
+			return currentNode
 		}
 
 		currentNode = currentNode.next
 	}
 
-	return false
+	return nil
 }
 
 func (list *linkedList) searchWithDebug(term int, resultsChannel chan<- string) {
-	termFound := fmt.Sprintf("Term %d found!", term)
-	termNotFound := fmt.Sprintf("Term %d does not exist in the current list", term)
-	res := list.search(term)
+	node := list.search(term)
 
-	if res {
-		resultsChannel <- termFound
+	if node != nil {
+		resultsChannel <- fmt.Sprintf("Node found! The current node address is %p, the data is %d, the previous node address is %p and the next node address is %p", node, node.data, node.previous, node.next)
 		return
 	}
 
-	resultsChannel <- termNotFound
+	resultsChannel <- fmt.Sprintf("Node %d does not exist in the current list", term)
 }
 
 func (list *linkedList) addNodeToEnd(data int) {
