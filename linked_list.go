@@ -85,7 +85,6 @@ func (list *linkedList) addNodeToEnd(data int) {
 		list.head = newNode
 	} else {
 		currentNode := list.head
-
 		for currentNode.next != nil {
 			currentNode = currentNode.next
 		}
@@ -172,6 +171,7 @@ func ManipulateLinkedLists(wg *sync.WaitGroup, resultsChannel chan<- string) {
 		list.searchWithDebug(4, resultsChannel)
 		list.removeByTerm(4)
 		list.removeByTerm(0)
+		list.addNodeToEnd(9)
 
 		list.Print(resultsChannel)
 	}()
