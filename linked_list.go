@@ -15,12 +15,8 @@ type linkedList struct {
 	head *node
 }
 
-func (list *linkedList) search(term int, resultsChannel chan<- string) bool {
-	termFound := fmt.Sprintf("Term %d found!", term)
-	termNotFound := fmt.Sprintf("Term %d does not exist in the current list", term)
-
+func (list *linkedList) search(term int) bool {
 	if list.head == nil {
-		resultsChannel <- "List Empty"
 		return false
 	}
 
@@ -28,16 +24,26 @@ func (list *linkedList) search(term int, resultsChannel chan<- string) bool {
 
 	for currentNode != nil {
 		if term == currentNode.data {
-			resultsChannel <- termFound
 			return true
 		}
 
 		currentNode = currentNode.next
 	}
 
-	resultsChannel <- termNotFound
-
 	return false
+}
+
+func (list *linkedList) searchWithDebug(term int, resultsChannel chan<- string) {
+	termFound := fmt.Sprintf("Term %d found!", term)
+	termNotFound := fmt.Sprintf("Term %d does not exist in the current list", term)
+	res := list.search(term)
+
+	if res {
+		resultsChannel <- termFound
+		return
+	}
+
+	resultsChannel <- termNotFound
 }
 
 func (list *linkedList) addNodeToEnd(data int) {
@@ -131,7 +137,7 @@ func ManipulateLinkedLists(wg *sync.WaitGroup, resultsChannel chan<- string) {
 		list.addNodeToBeginning(-1)
 		list.removeFromEnd()
 		list.removeFromBeginning()
-		list.search(5, resultsChannel)
+		list.searchWithDebug(5, resultsChannel)
 
 		list.Print(resultsChannel)
 	}()
