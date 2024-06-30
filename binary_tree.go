@@ -45,20 +45,20 @@ func initBTree() *tNode {
 	return &tNode{val: 10, right: &thirty, left: &fifteen}
 }
 
-func (n *tNode) preOrderSearch(resultsChannel chan<- string, term int) *tNode {
+func (n *tNode) preOrderSearch(out chan<- string, term int) *tNode {
 	if n != nil {
-		resultsChannel <- fmt.Sprintf("passing through %d", n.val)
+		out <- fmt.Sprintf("Passing through %d", n.val)
 		if n.val == term {
-			resultsChannel <- fmt.Sprintf("term %d found", n.val)
+			out <- fmt.Sprintf("term %d found", n.val)
 			return n
 		}
 
-		l := n.left.preOrderSearch(resultsChannel, term)
+		l := n.left.preOrderSearch(out, term)
 		if l != nil {
 			return l
 		}
 
-		r := n.right.preOrderSearch(resultsChannel, term)
+		r := n.right.preOrderSearch(out, term)
 		if r != nil {
 			return r
 		}
@@ -67,20 +67,20 @@ func (n *tNode) preOrderSearch(resultsChannel chan<- string, term int) *tNode {
 	return nil
 }
 
-func (n *tNode) inOrderSearch(resultsChannel chan<- string, term int) *tNode {
+func (n *tNode) inOrderSearch(out chan<- string, term int) *tNode {
 	if n != nil {
-		l := n.left.inOrderSearch(resultsChannel, term)
+		l := n.left.inOrderSearch(out, term)
 		if l != nil {
 			return l
 		}
 
-		resultsChannel <- fmt.Sprintf("passing through %d", n.val)
+		out <- fmt.Sprintf("Passing through %d", n.val)
 		if n.val == term {
-			resultsChannel <- fmt.Sprintf("term %d found", n.val)
+			out <- fmt.Sprintf("term %d found", n.val)
 			return n
 		}
 
-		r := n.right.inOrderSearch(resultsChannel, term)
+		r := n.right.inOrderSearch(out, term)
 		if r != nil {
 			return r
 		}
@@ -89,21 +89,21 @@ func (n *tNode) inOrderSearch(resultsChannel chan<- string, term int) *tNode {
 	return nil
 }
 
-func (n *tNode) postOrderSearch(resultsChannel chan<- string, term int) *tNode {
+func (n *tNode) postOrderSearch(out chan<- string, term int) *tNode {
 	if n != nil {
-		l := n.left.postOrderSearch(resultsChannel, term)
+		l := n.left.postOrderSearch(out, term)
 		if l != nil {
 			return l
 		}
 
-		r := n.right.postOrderSearch(resultsChannel, term)
+		r := n.right.postOrderSearch(out, term)
 		if r != nil {
 			return r
 		}
 
-		resultsChannel <- fmt.Sprintf("passing through %d", n.val)
+		out <- fmt.Sprintf("Passing through %d", n.val)
 		if n.val == term {
-			resultsChannel <- fmt.Sprintf("term %d found", n.val)
+			out <- fmt.Sprintf("term %d found", n.val)
 			return n
 		}
 	}
@@ -111,7 +111,7 @@ func (n *tNode) postOrderSearch(resultsChannel chan<- string, term int) *tNode {
 	return nil
 }
 
-func TraverseBinaryTrees(wg *sync.WaitGroup, resultsChannel chan<- string) {
+func TraverseBinaryTree(wg *sync.WaitGroup, out chan<- string) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -120,16 +120,16 @@ func TraverseBinaryTrees(wg *sync.WaitGroup, resultsChannel chan<- string) {
 		finished := "Finished traversing \n"
 		searchTerm := 6
 
-		resultsChannel <- "Preorder Searching..."
-		bTree.preOrderSearch(resultsChannel, searchTerm)
-		resultsChannel <- finished
+		out <- "Preorder Searching..."
+		bTree.preOrderSearch(out, searchTerm)
+		out <- finished
 
-		resultsChannel <- "InOrder Searching..."
-		bTree.inOrderSearch(resultsChannel, searchTerm)
-		resultsChannel <- finished
+		out <- "InOrder Searching..."
+		bTree.inOrderSearch(out, searchTerm)
+		out <- finished
 
-		resultsChannel <- "PostOrder Searching..."
-		bTree.postOrderSearch(resultsChannel, searchTerm)
-		resultsChannel <- finished
+		out <- "PostOrder Searching..."
+		bTree.postOrderSearch(out, searchTerm)
+		out <- finished
 	}()
 }

@@ -13,7 +13,8 @@ func main() {
 
 	// pp.BinaryVsSerialSearch(&wg, resultsChannel)
 	// pp.ManipulateLinkedLists(&wg, resultsChannel)
-	pp.TraverseBinaryTrees(&wg, resultsChannel)
+	// pp.TraverseBinaryTree(&wg, resultsChannel)
+	pp.TraverseBinarySearchTree(&wg, resultsChannel)
 
 	go func() {
 		wg.Wait()
