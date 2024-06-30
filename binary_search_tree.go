@@ -13,8 +13,8 @@ import (
       5   15
      / \  / \
     3   6 10 30
-   /     \
-  2       8
+   /     \    \
+  2       8    50
 
 */
 
@@ -25,7 +25,8 @@ func initBSTree() *tNode {
 	six := &tNode{val: 6, right: eight}
 	five := &tNode{val: 5, left: three, right: six}
 	ten := &tNode{val: 10}
-	thirty := &tNode{val: 30}
+	fifty := &tNode{val: 50}
+	thirty := &tNode{val: 30, right: fifty}
 	fifteen := &tNode{val: 15, left: ten, right: thirty}
 	return &tNode{val: 9, left: five, right: fifteen}
 }
@@ -56,7 +57,7 @@ func TraverseBinarySearchTree(wg *sync.WaitGroup, resultsChannel chan<- string) 
 		defer wg.Done()
 
 		finished := "Finished traversing \n"
-		searchTerm := 8
+		searchTerm := 50
 
 		resultsChannel <- "Traversing Binary Search Tree..."
 		bst := initBSTree()

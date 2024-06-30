@@ -118,7 +118,7 @@ func TraverseBinaryTree(wg *sync.WaitGroup, out chan<- string) {
 		bTree := initBTree()
 
 		finished := "Finished traversing \n"
-		searchTerm := 6
+		searchTerm := 2
 
 		out <- "Preorder Searching..."
 		bTree.preOrderSearch(out, searchTerm)
