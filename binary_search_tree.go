@@ -34,22 +34,23 @@ func initBSTree(out chan<- string) *tNode {
 
 func (n *tNode) insert(out chan<- string, val int) *tNode {
 	newNode := &tNode{val: val}
+
 	if n == nil {
-		out <- fmt.Sprintf("No nodes found, creating Root on value %d", newNode.val)
+		out <- fmt.Sprintf("No node found, setting %d as the Root", val)
 		return newNode
 	}
 
 	out <- fmt.Sprintf("Passing through %d", n.val)
-	if newNode.val < n.val {
+	if val < n.val {
 		if n.left == nil {
-			out <- fmt.Sprintf("<- Creating %d on the left", val)
+			out <- fmt.Sprintf("<- Inserting %d to the left", val)
 			n.left = newNode
 		} else {
 			n.left = n.left.insert(out, val)
 		}
 	} else {
 		if n.right == nil {
-			out <- fmt.Sprintf("-> Creating %d on the right", val)
+			out <- fmt.Sprintf("-> Inserting %d to the right", val)
 			n.right = newNode
 		} else {
 			n.right = n.right.insert(out, val)
@@ -89,7 +90,7 @@ func TraverseBinarySearchTree(wg *sync.WaitGroup, resultsChannel chan<- string) 
 		resultsChannel <- "Finished Initializing. \n"
 
 		searchTerm := 51
-		resultsChannel <- "Traversing Binary Search Tree...\n"
+		resultsChannel <- fmt.Sprintf("Searching %d on Binary Search Tree...\n", searchTerm)
 		bst.search(resultsChannel, searchTerm)
 		resultsChannel <- "Finished traversing \n"
 	}()
