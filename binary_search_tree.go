@@ -11,24 +11,52 @@ import (
         9
        / \
       5   15
-     / \  / \
-    3   6 10 30
-   /     \    \
-  2       8    50
+     /    /  \
+    3    10   30
+   /           \
+  2             50
+                 \
+                  51
 
 */
 
-func initBSTree() *tNode {
-	two := &tNode{val: 2}
-	three := &tNode{val: 3, left: two}
-	eight := &tNode{val: 8}
-	six := &tNode{val: 6, right: eight}
-	five := &tNode{val: 5, left: three, right: six}
-	ten := &tNode{val: 10}
-	fifty := &tNode{val: 50}
-	thirty := &tNode{val: 30, right: fifty}
-	fifteen := &tNode{val: 15, left: ten, right: thirty}
-	return &tNode{val: 9, left: five, right: fifteen}
+func initBSTree(out chan<- string) *tNode {
+	var bt *tNode
+
+	// The first number will be the Root.
+	values := []int{9, 5, 3, 2, 15, 10, 30, 50, 51}
+	for _, val := range values {
+		bt = bt.insert(out, val)
+	}
+
+	return bt
+}
+
+func (n *tNode) insert(out chan<- string, val int) *tNode {
+	newNode := &tNode{val: val}
+	if n == nil {
+		out <- fmt.Sprintf("No nodes found, creating Root on value %d", newNode.val)
+		return newNode
+	}
+
+	out <- fmt.Sprintf("Passing through %d", n.val)
+	if newNode.val < n.val {
+		if n.left == nil {
+			out <- fmt.Sprintf("<- Creating %d on the left", val)
+			n.left = newNode
+		} else {
+			n.left = n.left.insert(out, val)
+		}
+	} else {
+		if n.right == nil {
+			out <- fmt.Sprintf("-> Creating %d on the right", val)
+			n.right = newNode
+		} else {
+			n.right = n.right.insert(out, val)
+		}
+	}
+
+	return n
 }
 
 func (n *tNode) search(out chan<- string, term int) *tNode {
@@ -40,7 +68,7 @@ func (n *tNode) search(out chan<- string, term int) *tNode {
 	out <- fmt.Sprintf("Passing through %d", n.val)
 
 	if n.val == term {
-		out <- fmt.Sprintf("Term %d found", term)
+		out <- fmt.Sprintf("Term %d found!", term)
 		return n
 	}
 
@@ -56,13 +84,13 @@ func TraverseBinarySearchTree(wg *sync.WaitGroup, resultsChannel chan<- string) 
 	go func() {
 		defer wg.Done()
 
-		finished := "Finished traversing \n"
-		searchTerm := 50
+		resultsChannel <- "Initializing Binary Search Tree...\n"
+		bst := initBSTree(resultsChannel)
+		resultsChannel <- "Finished Initializing. \n"
 
-		resultsChannel <- "Traversing Binary Search Tree..."
-		bst := initBSTree()
+		searchTerm := 51
+		resultsChannel <- "Traversing Binary Search Tree...\n"
 		bst.search(resultsChannel, searchTerm)
-
-		resultsChannel <- finished
+		resultsChannel <- "Finished traversing \n"
 	}()
 }
