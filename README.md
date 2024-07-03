@@ -1,4 +1,4 @@
 # pp
 Performance Playground ( ͡° ͜ʖ ͡°)
 
-This is a personal sandbox I use to store performance comparisons, to remember computer science fundamentals and more.  
+I use This personal sandbox to store performance comparisons, study data structures, refresh computer science foundations and more.
